@@ -5,7 +5,7 @@ import time
 from . import exception, user
 
 class Client:
-    PREFIX = 'http://anilist.co/api/'
+    PREFIX = 'https://anilist.co/api/'
     UA = 'py/grilllist'
     REDIRECTURI = 'https://github.com/Tiefkuehlpizze/grilllist' # Placeholder or something /o\
 
@@ -41,11 +41,9 @@ class Client:
         }
         print(self.refresh_token)
         if type(self.refresh_token) is str:
-            print('refreshing token')
             payload['grant_type'] = 'refresh_token'
             payload['refresh_token'] = self.refresh_token
         elif type(self.pin) is str:
-            print('authorizing')
             payload['grant_type'] = 'authorization_pin'
             payload['code'] = self.pin
 
@@ -78,63 +76,56 @@ class Client:
         self.expire_time = 0
 
     def checkerror(self, response):
-        print(response.content)
         if response.status_code >= 400:
-            raise exception.ApiError("API returned non positive statuscode", response.status_code)
+            error = ""
+            try:
+                json = response.json()
+                error = json['error']['message']
+            except ValueError:
+                pass
+            raise exception.ApiError("API returned non positive statuscode: " + error, response.status_code)
         if len(response.content) > 0:
             try:
                 int(response.content)
                 return response
             except ValueError:
                 pass
-            cont = response.json()
-            if 'error' in cont:
-                raise self.exceptions[cont['error']](cont['error'], cont['error_description'])
+            try:
+                cont = response.json()
+                if 'error' in cont:
+                    raise self.exceptions[cont['error']](cont['error'], cont['error_description'])
+            except ValueError:
+                # Anilist can reply with just "followed" *duh*
+                pass
         return response
                 
 
-    def get(self, path, **query):
+    def send_request(self, method, path, **query):
+        if method is not requests.get and self.pin is None:
+            raise NotAuthenticatedError("Action cannot be done until authentificated")
         headers = {
-            'access_token' : self.getaccesstoken(),
             'User-Agent' : self.UA,
+            'Authorization' : 'Bearer ' + self.getaccesstoken(),
         }
-
-        query['access_token'] = self.getaccesstoken()
         url = self.PREFIX + path
-        response = self.checkerror(requests.get(url, params=query, headers=headers))
+        print(query['data'])
+        response = self.checkerror(method(url, params=query['data'], headers=headers))
         try:
             return response.json()
         except ValueError:
             return None
-    
-    def post(self, path, **query):
-        if self.pin is None:
-            raise NotAuthenticatedError("Action cannot be done until authentificated")
-        headers = {
-            'access_token' : self.getaccesstoken(),
-            'User-Agent' : self.UA,
-        }
-        query['access_token'] = self.getaccesstoken()
-        url = self.PREFIX + path
 
-        response = self.checkerror(requests.post(url, headers=headers, data=query))
-        print(response)
-        if response.status_code == 200:
-            return True
-        else:
-            return response.status_code
+    def get(self, path, **query):
+        return self.send_request(requests.get, path, **query)
+    
+    def put(self, path, **query):
+        return self.send_request(requests.put, path, **query)
+
+    def post(self, path, **query):
+        return self.send_request(requests.post, path, **query)
 
     def delete(self, path, **data):
-        headers = {
-            'access_token' : self.getaccesstoken(),
-            'User-Agent' : self.UA,
-        }
-
-        query['access_token'] = self.getaccesstoken()
-        url = self.PREFIX + path
-        
-        response = self.checkerror(requests.delete(url, headers=headers, data=data))
-        return response.json()
+        return self.send_request(requests.delete, path, **query)
 
     def sleep(self, filename='state.txt'):
         data = {

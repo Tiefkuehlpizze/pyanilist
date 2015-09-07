@@ -1,4 +1,4 @@
-from . import exception
+from . import exception, animelist
 
 class AnilistUser:
 
@@ -15,6 +15,9 @@ class AnilistUser:
         ret += "Anilist: %s | " %      str(hasattr(self, 'anilist'))
         ret += "Mangalist: %s" %    str(hasattr(self, 'mangalist'))
         return ret
+
+    def getAnimelist(self):
+        return animelist.Animelist(self.client)
 
     def getblob(self):
         attributes = [ 'activities', 'followers', 'following', 'favourites',
@@ -107,4 +110,13 @@ class AnilistUser:
         if type(id) is not int:
             raise TypeError('id must be int')
         return self.delete('user/activity/reply' if isreply else 'user/activity', data = { 'id' : id })
-    
+   
+    # write
+    """
+    Toggles the follow state of an user
+
+    :param id: The Username to (un)follow
+    :return: string "followed"|"unfollowed"
+    """
+    def toggleFollow(self, id):
+        return self.client.post('user/follow', data={ 'id' : id })
