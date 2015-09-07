@@ -1,4 +1,4 @@
-from . import exception, animelist
+from . import exception, userlist
 
 class AnilistUser:
 
@@ -6,63 +6,26 @@ class AnilistUser:
         self.username = username
         self.client = client
     
-    def __str__(self):
-        ret = self.username + " | "
-        ret += "Basic: %s | " %        str(hasattr(self, 'basic'))
-        ret += "Activity: %s | " %     str(hasattr(self, 'activities'))
-        ret += "Followers: %s | " %    str(hasattr(self, 'followers'))
-        ret += "Favourites: %s | " %   str(hasattr(self, 'favourites'))
-        ret += "Anilist: %s | " %      str(hasattr(self, 'anilist'))
-        ret += "Mangalist: %s" %    str(hasattr(self, 'mangalist'))
-        return ret
+    def getUserlist(self):
+        return userlist.Userlist(self.client)
+
+    def getBasic(self):
+        reutrn self.client.get('user/' + self.username)
+
+    def getFollower(self):
+        return self.client.get('user/%s/followers' % self.username)
+
+    def getFollowing(self):
+        return self.client.get('user/%s/following' % self.username)
+
+    def getFavourites(self):
+        return self.client.get('user/%s/favourites' % self.username)
 
     def getAnimelist(self):
-        return animelist.Animelist(self.client)
+        return self.client.get('user/%s/animelist' % self.username)
 
-    def getblob(self):
-        attributes = [ 'activities', 'followers', 'following', 'favourites',
-                'anilist', 'mangalist', ]
-        blob = { }
-        if hasattr(self, 'basic'):
-            blob['profile'] = self.basic
-        for attr in attributes:
-            if hasattr(self, attr):
-                blob[attr] = getattr(self, attr)
-        return blob
-    
-    def loadAll(self):
-        self.loadBasic()
-        self.loadActivities()
-        self.loadFollower()
-        self.loadFollowing()
-        self.loadFavourites()
-        self.loadAnilist()
-        self.loadMangalist()
-
-
-    def loadBasic(self):
-        self.basic = self.client.get('user/' + self.username)
-        return self.basic
-
-    def loadFollower(self):
-        self.follower = self.client.get('user/%s/followers' % self.username)
-        return self.follower
-
-    def loadFollowing(self):
-        self.following = self.client.get('user/%s/following' % self.username)
-        return self.following
-
-    def loadFavourites(self):
-        self.favourites = self.client.get('user/%s/favourites' % self.username)
-        return self.favourites
-
-    def loadAnimelist(self):
-        self.anilist = self.client.get('user/%s/animelist' % self.username)
-        return self.anilist
-
-    def loadMangalist(self):
-        self.mangalist = self.client.get('user/%s/mangalist' % self.username)
-        return self.mangalist
+    def getMangalist(self):
+        return self.client.get('user/%s/mangalist' % self.username)
 
     def getActivities(self, user=None, page=0):
         if type(page) is not int:
@@ -70,24 +33,20 @@ class AnilistUser:
         if type(user) is str:
             return self.client.get('user/%s/activity' % user)
         elif user is None:
-            self.activities = self.client.get('user/activity', page=page)
-            return self.activities
+            return self.client.get('user/activity', page=page)
         raise TypeError('user must be str or None')
 
-    def loadNotifications(self):
+    def getNotifications(self):
         self.client.hasLogin()
-        self.notifications = self.client.get('user/notifications')
-        return self.notifications
+        return self.client.get('user/notifications')
 
     def getNotificationCount(self):
         self.client.hasLogin()
-        self.notificationcount = self.client.get('user/notifications/count')
-        return self.notificationcount
+        return self.client.get('user/notifications/count')
 
-    def loadAiring(self, limit=None):
+    def getAiring(self, limit=None):
         self.client.hasLogin()
-        self.airing = self.client.get('user/airing', limit=limit)
-        return self.airing
+        return self.client.get('user/airing', limit=limit)
 
     def search(self, query):
         return self.client.get('user/search/%s' % query)
