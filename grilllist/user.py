@@ -10,7 +10,7 @@ class AnilistUser:
         return userlist.Userlist(self.client)
 
     def getBasic(self):
-        reutrn self.client.get('user/' + self.username)
+        return self.client.get('user/' + self.username)
 
     def getFollower(self):
         return self.client.get('user/%s/followers' % self.username)
@@ -79,3 +79,81 @@ class AnilistUser:
     """
     def toggleFollow(self, id):
         return self.client.post('user/follow', data={ 'id' : id })
+
+    """
+    Adds or edits and entry on the animelist
+
+    :param id: The Anime ID
+    :param list_status: "plan to watch" || "completed" || "on-hold" || "dropped"
+    :param score: (string|int|float) Score value according to the user's preferences (10 point, 100 point, smiley, etc)
+    :param score-raw: (int) value from 0-100
+    :param episodes_watched: (int)
+    :param rewatched: (int)
+    :param notes: (string)
+    :param advanced_rating_scores: (string) comma separated scores, same order as advanced_rating_names (ex: ",,,," for empty or "10,40,0,,")
+    :param custom_lists: (string)  comma separated 1 or 0, same order as custom_list_anime (ex: ",,,," for empty or "1,1,0,,")
+    :param hidden_default: (int) 1 or 0
+    """
+    # Note: The documentation states, a POST request should be used
+    #       to create an entry and a PUT request should modify one.
+    #       We just use PUT, as anilist.co itself does this, too.
+    #       Greetings to Josh :)
+    def createAnimeEntry(self, id,
+        list_status="plan to watch", 
+        score=0, # (see comment - List score types)
+        score_raw=0, # (see comment - Raw score)
+        episodes_watched=0,
+        rewatched=0,
+        notes="",
+        advanced_rating_scores=",,,,", 
+        custom_lists=",,,,", 
+        hidden_default=0):
+        payload = {
+            'id' : id,
+            'list_status' : list_status,
+            'score' : score,
+            'score_raw' : score_raw,
+            'episodes_watched' : episodes_watched,
+            'rewatched' : rewatched,
+            'notes' : notes,
+            'advanced_rating_scores' : advanced_rating_scores,
+            'custom_lists' : custom_lists,
+            'hidden_default' : hidden_default,
+        }
+        return self.client.put('animelist', data=payload)
+    
+    def createMangaEntry(self, id,
+            list_status="plan to read",
+            score=0, # (see comment - List score types)
+            score_raw=0, # (see comment - Raw score)
+            volumes_read=0,
+            chapters_read=0,
+            reread=0,
+            notes="",
+            advanced_rating_scores=",,,,",
+            custom_lists=",,,,",
+            hidden_default=0):
+        payload = {
+            'id' : id,
+            'list_status' : list_status,
+            'score' : score,
+            'score_raw' : score_raw,
+            'volumes_read' : volumes_read,
+            'chapters_read' : chapters_read,
+            'reread' : reread,
+            'notes' : notes,
+            'advanced_rating_scores' : advanced_rating_scores,
+            'custom_lists' : custom_lists,
+            'hidden_default' : hidden_default,
+        }
+        return self.client.put('mangalist', data=payload)
+
+    def deleteAnimeEntry(self, id):
+        if type(id) is not int:
+            raise TypeError("id must be positive int")
+        return self.client.delete('animelist/%s' % id)
+
+    def deleteMangaEntry(self, id):
+        if type(id) is not int:
+            raise TypeError("id must be positive int")
+        return self.client.delete('mangalist/%s' % id)

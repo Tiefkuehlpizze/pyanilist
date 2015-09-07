@@ -39,7 +39,6 @@ class Client:
             'client_id' : self.id,
             'client_secret': self.secret,
         }
-        print(self.refresh_token)
         if type(self.refresh_token) is str:
             payload['grant_type'] = 'refresh_token'
             payload['refresh_token'] = self.refresh_token
@@ -47,7 +46,6 @@ class Client:
             payload['grant_type'] = 'authorization_pin'
             payload['code'] = self.pin
 
-        print('getaccesstoken; granttype: %s' % payload['grant_type'])
         headers = {
             'Content-Type' : 'application/x-www-form-urlencoded',
             'User-Agent' : self.UA,
@@ -108,8 +106,8 @@ class Client:
             'Authorization' : 'Bearer ' + self.getaccesstoken(),
         }
         url = self.PREFIX + path
-        print(query['data'])
-        response = self.checkerror(method(url, params=query['data'], headers=headers))
+        params = { } if 'data' not in query else query['data']
+        response = self.checkerror(method(url, params=params, headers=headers))
         try:
             return response.json()
         except ValueError:
@@ -124,7 +122,7 @@ class Client:
     def post(self, path, **query):
         return self.send_request(requests.post, path, **query)
 
-    def delete(self, path, **data):
+    def delete(self, path, **query):
         return self.send_request(requests.delete, path, **query)
 
     def sleep(self, filename='state.txt'):
@@ -148,7 +146,6 @@ class Client:
         c.expire_time = data['expire_time']
         c.refresh_token = data['refresh_token']
         c.pin = data['pin']
-        print(c.refresh_token)
         c.haslogin = c.refresh_token is not None
         return c
 
