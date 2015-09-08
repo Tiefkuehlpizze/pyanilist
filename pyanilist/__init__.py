@@ -9,4 +9,4 @@ __all__ = [
     'anime',
 ]
 
-from grilllist import *
+from pyanilist import *
