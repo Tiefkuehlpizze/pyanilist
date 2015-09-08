@@ -125,6 +125,15 @@ class Client:
     def delete(self, path, **query):
         return self.send_request(requests.delete, path, **query)
 
+    def getme(self):
+        self.hasLogin()
+        return self.get('user')
+
+    def getmyobject(self):
+        self.hasLogin()
+        data = self.get('user')
+        return user.AnilistUser(self, data['display_name'])
+
     def sleep(self, filename='state.txt'):
         data = {
             'id' : self.id,
