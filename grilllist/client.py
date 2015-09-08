@@ -130,11 +130,6 @@ class Client:
         self.hasLogin()
         return self.get('user')
 
-    def getmyobject(self):
-        self.hasLogin()
-        data = self.get('user')
-        return user.AnilistUser(self, data['display_name'])
-
     def sleep(self, filename='state.txt'):
         data = {
             'id' : self.id,
