@@ -1,4 +1,4 @@
-from . import anilist
+from . import client
 
 SEASONS = ['winter', 'spring', 'summer', 'fall']
 TYPES = ['Tv', 'Movie', 'Special', 'OVA', 'ONA', 'Tv Short']

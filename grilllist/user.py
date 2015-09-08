@@ -1,4 +1,4 @@
-from . import exception, userlist
+from . import exception
 
 class AnilistUser:
 

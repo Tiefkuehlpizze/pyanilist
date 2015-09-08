@@ -2,7 +2,7 @@ import json
 import os
 import requests
 import time
-from . import exception, user
+from . import exception
 
 class Client:
     PREFIX = 'https://anilist.co/api/'
@@ -71,6 +71,7 @@ class Client:
         if type(pin) is not str:
             raise TypeError("pin is not a string")
         self.pin = pin
+        self.haslogin = True
         self.expire_time = 0
 
     def checkerror(self, response):
