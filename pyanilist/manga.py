@@ -23,7 +23,7 @@ def basic(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/manga/%d', id)
+    return _get(client, 'manga/%d', id)
 
 def page(client, id):
     """ Gets all data about an manga to display a page with all related data
@@ -33,7 +33,7 @@ def page(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/manga/%d/page', id)
+    return _get(client, 'manga/%d/page', id)
 
 def characters(client, id):
     """ Gets data about an manga's characters
@@ -43,7 +43,7 @@ def characters(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/manga/%d/characters', id)
+    return _get(client, 'manga/%d/characters', id)
 
 def staff(client, id):
     """ Gets data about an manga's staff
@@ -53,7 +53,7 @@ def staff(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/manga/%d/staff', id)
+    return _get(client, 'manga/%d/staff', id)
 
 def browse(client, 
         page=None,

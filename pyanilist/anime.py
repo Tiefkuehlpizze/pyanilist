@@ -24,7 +24,7 @@ def basic(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/anime/%d', id)
+    return _get(client, 'anime/%d', id)
 
 def page(client, id):
     """ Gets all data about an anime to display a page with all related data
@@ -34,7 +34,7 @@ def page(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/anime/%d/page', id)
+    return _get(client, 'anime/%d/page', id)
 
 def characters(client, id):
     """ Gets data about an anime's characters
@@ -44,7 +44,7 @@ def characters(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/anime/%d/characters', id)
+    return _get(client, 'anime/%d/characters', id)
 
 def staff(client, id):
     """ Gets data about an anime's staff
@@ -54,7 +54,7 @@ def staff(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, '/anime/%d/staff', id)
+    return _get(client, 'anime/%d/staff', id)
 
 def actors(client, id):
     """ Gets data about an anime's actors
@@ -64,7 +64,7 @@ def actors(client, id):
     :return: json string
     :rtype: str
     """
-    return _get(client, '/anime/%d/actors', id)
+    return _get(client, 'anime/%d/actors', id)
 
 def airing(client, id):
     """ Gets data about an anime's airing times
@@ -74,7 +74,7 @@ def airing(client, id):
     :return: json string
     :rtype: str
     """
-    return _get(client, '/anime/%d/airing', id)
+    return _get(client, 'anime/%d/airing', id)
 
 def browse(client, 
         page=None,
