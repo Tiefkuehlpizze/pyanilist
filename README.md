@@ -10,25 +10,29 @@ A little Python library to request stuff from the Anilist.co API. Don't forget t
 
 ## Usage
 ```
-import grilllist
+import pyanilist
 
 id = 'some-id'
 secret = '00wow00such00secret00'
 pin = 'somepin'
 
 # create a client object
-c = grilllist.anilist.Client(id, secret)
+c = pyanilist.client.Client(id, secret)
 # give our client object a PIN to authentificate
 c.setPin(pin)
-# create a user object
-u = grilllist.user.AnilistUser(c, 'some-name')
-# load some data
-basicdata = u.getBasic()
+# load some data about the authentificated user
+basicdata = pyanilist.getBasic(c)
+# load some data about the user "foo"
+someusersdata = pyanilist.user.getBasic(c, "foo")
 # print the data (ugly)
 print(basicdata)
 # or load more stuff:
-animelist = u.getAnimelist()
-favourites = u.loadFavourites()
+animelist = pyanilist.user.getAnimelist(c)
+favourites = pyanilist.user.loadFavourites(c)
+# load foo's animelist
+fooslist = pyanilist.user.getAnimelist(c, "foo")
+# search for an anime
+result = pyanilist.anime.browse(c, year=2014, _type="Tv", genres="Action,Comedy")
 ```
 # Limitations
 This is still in development. I'm writing a quick Code'n'Fix style, so the library can break everytime.
