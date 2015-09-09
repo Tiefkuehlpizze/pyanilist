@@ -151,3 +151,6 @@ def deleteMangaEntry(client, id):
     if type(id) is not int:
         raise TypeError("id must be positive int")
     return client.delete('mangalist/%s' % id)
+
+def get_reviews(client, id)
+    return client.get("user/%s/reviews" % id)
