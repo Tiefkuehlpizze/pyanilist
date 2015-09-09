@@ -69,7 +69,9 @@ class Client:
             error = ""
             try:
                 json = response.json()
-                error = json['error']['message']
+                if response.status_code == 401:
+                    raise exception.NotAuthenticatedError(json['error'])
+                error = json['error'] if isinstance(json['error'], str) else json['error']['message']
             except ValueError:
                 pass
             raise exception.ApiError("API returned non positive statuscode: " + error, response.status_code)
