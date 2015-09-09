@@ -130,6 +130,14 @@ class Client:
         self.hasLogin()
         return self.get('user')
 
+    def setSession(self, access_token, expire_time, pin,refresh_token=None):
+        self.access_token = data['access_token']
+        self.expire_time = data['expire_time']
+        self.refresh_token = data['refresh_token']
+        self.pin = data['pin']
+        c.haslogin = c.refresh_token is not None
+
+    @deprecated
     def sleep(self, filename='state.txt'):
         data = {
             'id' : self.id,
@@ -142,6 +150,7 @@ class Client:
         with open(filename, 'w') as f:
             f.write(json.dumps(data))
 
+    @deprecated
     @staticmethod
     def wake(filename='state.txt'):
         with open(filename, 'r') as f:
@@ -154,6 +163,7 @@ class Client:
         c.haslogin = c.refresh_token is not None
         return c
 
+    @deprecated
     @staticmethod
     def canWake(filename='state.txt'):
         return os.path.isfile(filename)
