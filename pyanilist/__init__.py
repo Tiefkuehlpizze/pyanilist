@@ -7,6 +7,12 @@ __all__ = [
     'client',
     'user',
     'anime',
+    'manga',
+    'character',
+    'staff',
+    'studio',
+    'review',
+    'forum',
 ]
 
 from pyanilist import *

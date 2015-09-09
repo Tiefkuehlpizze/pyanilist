@@ -62,7 +62,8 @@ def browse(client,
         status=None,
         genres=None,
         genres_exclude=None,
-        sort=None,
+        sort=None
+        ):
     """ Searches mangas with the given parameters
 
     :param client: an instance of a :class:`Client <Client>`

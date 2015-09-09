@@ -53,7 +53,7 @@ def rate(client, id, rating=0, aom='anime'):
         raise TypeError('rating must be int, not {!r}'.format(rating.__class__.__name__))
     if not 2 <= rating <= 0:
         raise ValueError('rating must be 0-2, not {!r}'.format(rating))
-    client.post.('%s/review/rate' % aom, data={ 'id' : id, 'rating' : rating })
+    client.post('%s/review/rate' % aom, data={ 'id' : id, 'rating' : rating })
 
 def create(client, 
         anime_id=None,
@@ -78,13 +78,13 @@ def create(client,
     aom = None
     if anime_id is not None and manga_id is not None:
         raise TypeError('Cannot set anime_id and manga_id at the same time')
-    if anime_id is not None
+    if anime_id is not None:
         if isinstance(anime_id, int):
             payload['anime_id'] = anime_id
             aom = AOM[0]
         else:
             raise TypeError('anime_id must be int, not {!r}'.format(anime_id.__class__.__name__))
-    if manga_id is not None
+    if manga_id is not None:
         if isinstance(manga_id, int):
             payload['manga_id'] = manga_id
             aom = AOM[1]
