@@ -4,6 +4,7 @@ __version__ = '0.1'
 
 __all__ = [
     'exception',
+    'session',
     'client',
     'user',
     'anime',
