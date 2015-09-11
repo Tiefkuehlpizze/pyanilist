@@ -1,67 +1,59 @@
 from . import exception
 
-def getMe(client):
+def get_me(client):
     return getBasic(client)
 
-def getBasic(client, user=None):
+def get_basic(client, user=None):
     return client.get('user' + ('/%s' % user if user is not None else ''))
 
-def getFollower(client, user):
+def get_follower(client, user):
     return client.get('user/%s/followers' % user)
 
-def getFollowing(client, user):
+def get_following(client, user):
     return client.get('user/%s/following' % user)
 
-def getFavourites(client, user):
+def get_favourites(client, user):
     return client.get('user/%s/favourites' % user)
 
-def getAnimelist(client, user):
+def get_animelist(client, user):
     return client.get('user/%s/animelist' % user)
 
-def getMangalist(client, user):
+def get_mangalist(client, user):
     return client.get('user/%s/mangalist' % user)
 
-def getActivities(client, user=None, page=0):
-    if type(page) is not int:
-        page = 0
-    if type(user=None) is str:
-        return client.get('user/%s/activity' % user)
-    elif user is None:
-        return client.get('user/activity', page=page)
-    raise TypeError('user must be str or None')
+def get_activities(client, user=None, page=0):
+    if user is not None:
+        return client.get('user/%s/activity' % user, data={ 'page' : page }):
+    return client.get('user/activity', data={ 'page' : int(page) })
 
-def getNotifications(client):
+def get_notifications(client):
     client.hasLogin()
     return client.get('user/notifications')
 
-def getNotificationCount(client):
+def get_notification_count(client):
     client.hasLogin()
     return client.get('user/notifications/count')
 
-def getAiring(client, limit=None):
+def get_airing(client, limit=None):
     client.hasLogin()
-    return client.get('user/airing', limit=limit)
+    return client.get('user/airing', data={ 'limit' : limit })
 
 def search(client, query):
     return client.get('user/search/%s' % query)
 
 # write
-def writeActivity(client, user, text, reply_id = None, messenger_id = None):
-    if type(text) is not str:
-        raise TypeError('text must be string')
+def write_activity(client, user, text, reply_id = None, messenger_id = None):
     payload = { 'text' : text }
-    if type(reply_id) is int:
+    if reply_id is not None:
         payload['reply_id'] = reply_id
-    if type(messenger_id) is int:
+    if messenger_id is not None:
         payload['messenger_id'] = messenger_id
     if len(payload) > 2:
         raise exception.AmbigiousCallError('reply_id and messenger_id cannot be used at once')
     return client.post('user/activity', data=payload)
 
 # write
-def deleteActivity(client, user, id, isreply=False):
-    if type(id) is not int:
-        raise TypeError('id must be int')
+def delete_activity(client, user, id, isreply=False):
     return client.delete('user/activity/reply' if isreply else 'user/activity', data = { 'id' : id })
 
 # write
@@ -71,7 +63,7 @@ Toggles the follow state of an user
 :param id: The Username to (un)follow
 :return: string "followed"|"unfollowed"
 """
-def toggleFollow(client, id):
+def toggle_follow(client, id):
     return client.post('user/follow', data={ 'id' : id })
 
 """
@@ -92,7 +84,7 @@ Adds or edits and entry on the animelist
 #       to create an entry and a PUT request should modify one.
 #       We just use PUT, as anilist.co itclient, user does this, too.
 #       Greetings to Josh :)
-def createAnimeEntry(client, id,
+def create_anime_entry(client, id,
     list_status="plan to watch", 
     score=0, # (see comment - List score types)
     score_raw=0, # (see comment - Raw score)
@@ -116,7 +108,7 @@ def createAnimeEntry(client, id,
     }
     return client.put('animelist', data=payload)
 
-def createMangaEntry(client, id,
+def create_manga_entry(client, id,
         list_status="plan to read",
         score=0, # (see comment - List score types)
         score_raw=0, # (see comment - Raw score)
@@ -142,14 +134,10 @@ def createMangaEntry(client, id,
     }
     return client.put('mangalist', data=payload)
 
-def deleteAnimeEntry(client, id):
-    if type(id) is not int:
-        raise TypeError("id must be positive int")
+def delete_anime_entry(client, id):
     return client.delete('animelist/%s' % id)
 
-def deleteMangaEntry(client, id):
-    if type(id) is not int:
-        raise TypeError("id must be positive int")
+def delete_mang_eEntry(client, id):
     return client.delete('mangalist/%s' % id)
 
 def get_reviews(client, id):

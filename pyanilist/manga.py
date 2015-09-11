@@ -1,16 +1,8 @@
 from . import client
 
-TYPES = ['Manga', 'Novel', 'Manhua', 'Manhwa', 'One', 'Doujin']
-STATUS = ['Not Yet Published', 'Currently Publishing', 'Finished', 'Cancelled']
+TYPES = ['manga', 'novel', 'manhua', 'manhwa', 'one', 'doujin']
+STATUS = ['not yet published', 'currently publishing', 'finished', 'cancelled']
 SORT = ['id', 'score', 'popularity', 'start date', 'end date', 'id-desc', 'score-desc', 'popularity-desc', 'start date-desc', 'end date-desc']
-
-def _idisint(id):
-    if not isinstance(id, int):
-        raise TypeError('the id must be int, not {!r}'.format(id.__class__.__name__))
-
-def _get(client, path, id):
-    _idisint(id)
-    return client.get(path % id)
 
 def genre_list(client):
     return client.get('genre_list')
@@ -23,7 +15,7 @@ def basic(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, 'manga/%d', id)
+    return client.get('manga/%d' % id)
 
 def page(client, id):
     """ Gets all data about an manga to display a page with all related data
@@ -33,7 +25,7 @@ def page(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, 'manga/%d/page', id)
+    return client.get('manga/%d/page' % id)
 
 def characters(client, id):
     """ Gets data about an manga's characters
@@ -43,7 +35,7 @@ def characters(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, 'manga/%d/characters', id)
+    return client.get('manga/%d/characters' % id)
 
 def staff(client, id):
     """ Gets data about an manga's staff
@@ -53,7 +45,7 @@ def staff(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, 'manga/%d/staff', id)
+    return client.get('manga/%d/staff' % id)
 
 def browse(client, 
         page=None,
@@ -79,45 +71,30 @@ def browse(client,
     """
     params = {}
     if page is not None:
-        if isinstance(page, int):
-            params['page'] = page
-        else:
-            raise TypeError('page must be int, not {!r}'.format(page.__class__.__name__))
+        params['page'] = page
 
     if year is not None:
-        if isinstance(year, int) and (1900 <= year <= 9999):
-            params['year'] = year
-        else:
-            raise TypeError('year must be int between 1900 and 9999'.format(year.__class__.__name__))
+        params['year'] = year
 
     if _type is not None:
-        if isinstance(_type, str) and _type.lower() in map(str.lower, TYPES):
+        if _type.lower() in map(str.lower, TYPES):
             params['type'] = _type
         else:
-            raise TypeError('_type must be string and in %s' % str(TYPES))
+            raise ValueError('_type must be in %s' % str(TYPES))
     if status is not None:
-        if isinstance(status, str) and status.lower() in map(str.lower, STATUS):
+        if status.lower() in map(str.lower, STATUS):
             params['status'] = status
         else:
-            raise TypeError('status must be string and in %s' % str(STATUS))
+            raise ValueError('status must be in %s' % str(STATUS))
     if genres is not None:
-        if isinstance(genres, str):
-            params['genres'] = genres
-        else:
-            raise TypeError('genres must be string, not {!r}'.format(genres.__class__.__name__))
+        params['genres'] = genres
     if genres_exclude is not None:
-        if isinstance(genres_exclude, str):
-            params['genres_exclude'] = genres_exclude
-        else:
-            raise TypeError('genres_exclude must be string, not {!r}'.format(genres_exclude.__class__.__name__))
+        params['genres_exclude'] = genres_exclude
     if sort is not None:
-        if isinstance(sort, str):
-            if sort.lower() in SORT:
-                params['sort'] = sort
-            else:
-                raise TypeError('sort must be in %s' % str(SORT))
+        if sort.lower() in SORT:
+            params['sort'] = sort
         else:
-            raise TypeError('sort must be string, not {!r}'.format(sort.__class__.__name__))
+            raise TypeError('sort must be in %s' % str(SORT))
     
     return client.get('browse/manga', data=params)
 
@@ -129,7 +106,6 @@ def favourite(client, id):
     :return: "Favourite Added" || "Favourite Removed"
     :rtype: str
     """
-    _idisint(id)
     client.hasLogin()
     return client.post('manga/favourite', data={ 'id' : id })
 

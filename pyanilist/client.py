@@ -13,15 +13,15 @@ class Client:
         self.id = id
         self.secret = secret
         self.session = session.Session()
-        self.haslogin = False
+        self.login = False
 
-    def hasLogin(self, noexcept=False):
-        if noexcept or self.haslogin:
-            return self.haslogin
+    def has_login(self, noexcept=False):
+        if noexcept or self.login:
+            return self.login
         raise exception.NotAuthenticatedError("User not authentificated")
 
-    def getaccesstoken(self):
-        if self.session.access_token != None and not self.session.expired():
+    def get_accesstoken(self):
+        if self.session.access_token is not None and not self.session.expired():
             return self.session.access_token
         
         url = self.PREFIX + 'auth/access_token'
@@ -31,10 +31,10 @@ class Client:
             'client_id' : self.id,
             'client_secret': self.secret,
         }
-        if type(self.session.refresh_token) is str:
+        if self.session.refresh_token:
             payload['grant_type'] = 'refresh_token'
             payload['refresh_token'] = self.session.refresh_token
-        elif type(self.session.pin) is str:
+        elif self.session.pin:
             payload['grant_type'] = 'authorization_pin'
             payload['code'] = self.session.pin
 
@@ -50,21 +50,21 @@ class Client:
         self.session.access_token = res['access_token']
         self.session.expire_time = start + res['expires_in']
         self.session.refresh_token = res['refresh_token'] if 'refresh_token' in res else None
-        self.haslogin = self.session.refresh_token is not None
+        self.has_login = self.session.refresh_token is not None
 
         return self.session.access_token
 
-    def getPinUri(self):
+    def get_pin_uri(self):
         return self.PREFIX + 'auth/authorize?grant_type=authorization_pin&client_id=%s&response_type=pin&redirect_uri=%s' % (self.id, self.REDIRECTURI)
 
-    def setPin(self, pin):
-        if type(pin) is not str:
+    def set_pin(self, pin):
+        if isinstance(pin, str):
             raise TypeError("pin is not a string")
         self.session.pin = pin
-        self.haslogin = True
+        self.login = True
         self.session.expire_time = 0
 
-    def checkerror(self, response):
+    def check_error(self, response):
         if response.status_code >= 400:
             error = ""
             try:
@@ -75,7 +75,7 @@ class Client:
             except ValueError:
                 pass
             raise exception.ApiError("API returned non positive statuscode: " + error, response.status_code)
-        if len(response.content) > 0:
+        if response.content:
             try:
                 int(response.content)
                 return response
@@ -96,11 +96,11 @@ class Client:
             raise NotAuthenticatedError("Action cannot be done until authentificated")
         headers = {
             'User-Agent' : self.UA,
-            'Authorization' : 'Bearer ' + self.getaccesstoken(),
+            'Authorization' : 'Bearer ' + self.get_accesstoken(),
         }
         url = self.PREFIX + path
         params = { } if 'data' not in query else query['data']
-        response = self.checkerror(method(url, params=params, headers=headers))
+        response = self.check_error(method(url, params=params, headers=headers))
         try:
             return response.json()
         except ValueError:
@@ -118,17 +118,17 @@ class Client:
     def delete(self, path, **query):
         return self.send_request(requests.delete, path, **query)
 
-    def getme(self):
-        self.hasLogin()
+    def get_me(self):
+        self.has_login()
         return self.get('user')
 
-    def setSession(self, obj):
+    def set_session(self, obj):
         if not isinstance(obj, session.Session):
             raise TypeError('given parameter has an invalid type, was {!r}'.format(obj.__class__.__name__))
         self.session = obj
-        self.haslogin = self.session.refresh_token is not None
+        self.login = self.session.refresh_token is not None
     
-    def getSession(self):
+    def get_session(self):
         return self.session
 
     def sleep(self, filename='state.txt'):
@@ -153,8 +153,8 @@ class Client:
         s.expire_time = data['expire_time']
         s.refresh_token = data['refresh_token']
         s.pin = data['pin']
-        c.setSession(s)
-        c.haslogin = s.refresh_token is not None
+        c.set_session(s)
+        c.login = s.refresh_token is not None
         return c
 
     @staticmethod

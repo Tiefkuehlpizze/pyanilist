@@ -8,9 +8,6 @@ TAGS = { 1 : 'Anime', 2 : 'Manga', 3: 'Light Novels',
          16 : 'Forum Games', 17 : 'Misc', 18 : 'AniList Apps'
        }
 
-def istype(var, name, type):
-    if not isinstance(var, type):
-        raise TypeError('{!r} must be {!r}, not {!r}'.format(name, type.__name__, id.__class__.__name__))
 
 def recent(client, page=1):
     """ Gets recent threads
@@ -20,7 +17,6 @@ def recent(client, page=1):
     :return: json string
     :rtype: str
     """
-    istype(page, "page", int)
     return client.get('forum/recent', data={ 'page' : page })
 
 def new(client, page=1):
@@ -31,7 +27,6 @@ def new(client, page=1):
     :return: json string
     :rtype: str
     """
-    istype(page, "page", int)
     return client.get('forum/new', data={ 'page' : page })
 
 def subscribed(client, page=1):
@@ -42,7 +37,6 @@ def subscribed(client, page=1):
     :return: json string
     :rtype: str
     """
-    istype(page, "page", int)
     client.hasLogin()
     return client.get('forum/subscribed', data={ 'page' : page })
 
@@ -55,7 +49,6 @@ def thread(client, id):
     :return: json string
     :rtype: str
     """
-    istype(id, "id", int)
     return client.get('forum/thread/%d' % id)
 
 def bytag(client, tag="", anime="", manga="", page=1):
@@ -69,10 +62,6 @@ def bytag(client, tag="", anime="", manga="", page=1):
     :return: json string
     :rtype: str
     """
-    istype(tag, "tag", str)
-    istype(anime, "anime", str)
-    istype(manga, "manga", str)
-    istype(page, "page", int)
     return client.get('forum/tag', data={ 'tag' : tag, 'anime' : anime, 'manga' : manga, 'page' : page })
 
 def _create(method, title, body, tags, tags_anime, tags_manga):
@@ -87,11 +76,6 @@ def _create(method, title, body, tags, tags_anime, tags_manga):
     :return: ?
     :rtype: ?
     """
-    istype(title, "title", str)
-    istype(body, "body", str)
-    istype(tags, "tags", str)
-    istype(tags_anime, "tags_anime", str)
-    istype(tags_manga, "tags_manga", str)
     if len(title) == 0:
         raise ValueError('Title can not be empty')
     if len(body) == 0:
@@ -134,7 +118,6 @@ def delete(client, id):
     :return: ?
     :rtype: ?
     """
-    istype(id, "id", int)
     return client.delete('forum/thread/%d' % id)
 
 def subscribe(client, id):
@@ -145,7 +128,6 @@ def subscribe(client, id):
     :return: "subscribed" || "unsubscribed" (unverified)
     :rtype: str
     """
-    istype(id, "id", int)
     return client.post('forum/comment/subscribe', data={ 'thread_id' : id })
 
 def comment(client, id, comment, reply_id=None):
@@ -158,8 +140,6 @@ def comment(client, id, comment, reply_id=None):
     :return: ?
     :rtype: ?
     """
-    istype(id, "id", int)
-    istype(comment, "comment", str)
     if len(comment) == 0:
         raise ValueError("comment can not be empty")
     params = {
@@ -167,7 +147,6 @@ def comment(client, id, comment, reply_id=None):
         'comment' : comment,
     }
     if reply_id is not None:
-        istype(reply_id, "reply_id", int)
         params['reply_id'] = reply_id
     return client.post('forum/comment', data=params)
 
@@ -180,8 +159,6 @@ def edit_comment(client, id, comment):
     :return: ?
     :rtype: ?
     """
-    istype(id, "id", int)
-    istype(comment, "comment", str)
     if len(comment) == 0:
         raise ValueError("comment can not be empty")
     params = {
@@ -198,7 +175,6 @@ def delete_comment(client, id):
     :return: ?
     :rtype: ?
     """
-    istype(id, "id", int)
     return client.delete('forum/comment/%d' % id)
 
 def search(client, query):

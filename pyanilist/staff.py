@@ -1,13 +1,5 @@
 from . import client
 
-def _idisint(id):
-    if not isinstance(id, int):
-        raise TypeError('the id must be int, not {!r}'.format(id.__class__.__name__))
-
-def _get(client, path, id):
-    _idisint(id)
-    return client.get(path % id)
-
 def basic(client, id):
     """ Gets basic data about an staff
     
@@ -16,7 +8,7 @@ def basic(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, 'staff/%d', id)
+    return client.get('staff/%d' %id)
 
 def page(client, id):
     """ Gets all data about an staff to display a page with all related data
@@ -26,7 +18,7 @@ def page(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return _get(client, 'staff/%d/page', id)
+    return client.get('staff/%d/page' % id)
 
 def favourite(client, id):
     """ Toggles the favourite status of an staff
@@ -36,7 +28,6 @@ def favourite(client, id):
     :return: "Favourite Added" || "Favourite Removed"
     :rtype: str
     """
-    _idisint(id)
     client.hasLogin()
     return client.post('staff/favourite', data={ 'id' : id })
 
