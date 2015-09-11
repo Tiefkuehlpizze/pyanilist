@@ -82,7 +82,7 @@ def create(client,
     if not 20 <= len(summary) <= 120:
         raise ValueError('summary must have at least 20 and maximal 120 chars, not {!r}'.format(len(summary)))
     payload['summary'] = summary
-        payload['private'] = private
+    payload['private'] = private
     if score is not None:
         payload['score'] = score
 

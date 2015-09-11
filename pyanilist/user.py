@@ -23,7 +23,7 @@ def get_mangalist(client, user):
 
 def get_activities(client, user=None, page=0):
     if user is not None:
-        return client.get('user/%s/activity' % user, data={ 'page' : page }):
+        return client.get('user/%s/activity' % user, data={ 'page' : page })
     return client.get('user/activity', data={ 'page' : int(page) })
 
 def get_notifications(client):
