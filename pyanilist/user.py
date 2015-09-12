@@ -53,7 +53,7 @@ def write_activity(client, user, text, reply_id = None, messenger_id = None):
     return client.post('user/activity', data=payload)
 
 # write
-def delete_activity(client, user, id, isreply=False):
+def delete_activity(client, id, isreply=False):
     return client.delete('user/activity/reply' if isreply else 'user/activity', data = { 'id' : id })
 
 # write

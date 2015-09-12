@@ -14,6 +14,7 @@ __all__ = [
     'studio',
     'review',
     'forum',
+    'anilist',
 ]
 
 from pyanilist import *

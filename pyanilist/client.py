@@ -58,7 +58,7 @@ class Client:
         return self.PREFIX + 'auth/authorize?grant_type=authorization_pin&client_id=%s&response_type=pin&redirect_uri=%s' % (self.id, self.REDIRECTURI)
 
     def set_pin(self, pin):
-        if isinstance(pin, str):
+        if not isinstance(pin, str):
             raise TypeError("pin is not a string")
         self.session.pin = pin
         self.login = True
@@ -128,6 +128,15 @@ class Client:
         self.session = obj
         self.login = self.session.refresh_token is not None
     
+    def restore_session(self, access_token, expire_time, pin=None, refresh_token=None):
+        s = session.Session()
+        s.access_token = access_token
+        s.expire_time = expire_time
+        s.pin = pin
+        s.refresh_token = refresh_token
+        self.set_session(s)
+        
+
     def get_session(self):
         return self.session
 
