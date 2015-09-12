@@ -19,25 +19,59 @@ pin = 'somepin'
 # create a client object
 c = pyanilist.client.Client(id, secret)
 # give our client object a PIN to authentificate
-c.setPin(pin)
-# load some data about the authentificated user
-basicdata = pyanilist.getBasic(c)
-# load some data about the user "foo"
-someusersdata = pyanilist.user.getBasic(c, "foo")
+c.set_pin(pin)
+# get some data about the authentificated user (no parameter means the authentifcated user)
+basicdata = pyanilist.get_basic(c)
+# get some data about the user "foo"
+someusersdata = pyanilist.user.get_basic(c, "foo")
 # print the data (ugly)
 print(basicdata)
-# or load more stuff:
-animelist = pyanilist.user.getAnimelist(c)
-favourites = pyanilist.user.loadFavourites(c)
-# load foo's animelist
-fooslist = pyanilist.user.getAnimelist(c, "foo")
+# or get more stuff:
+animelist = pyanilist.user.get_animelist(c)
+favourites = pyanilist.user.get_favourites(c)
+# get foo's animelist
+fooslist = pyanilist.user.get_animelist(c, "foo")
 # search for an anime
 result = pyanilist.anime.browse(c, year=2014, _type="Tv", genres="Action,Comedy")
 ```
+To go the object oriented way, you can do the same by using this code
+```
+ani = pyanilist.anilist.Anilist(id, secret)
+ani.set_pin(pin)
+# get basic data about the authentificated user
+basicdata = ani.user.get_basic()
+# get basic data about user "foo"
+someusersdata = ani.user.get_basic("foo")
+# get animelist and favourites of the authentifcated user
+animelist = ani.user.get_animelist()
+favourites = ani.user.get_favourites()
+# get foo's animelist
+fooslist = ani.user.get_animelist("foo")
+# search for an anime
+result  = ani.anime.browse(year=2014, _type="tv", genres="Action,Comedy")
+```
+
+When you are finished, you have to save the token to avoid asking the user to pass another pin to your app!
+```
+# store a dictionary in mysessiondata to store it persistently somewhere
+mysessiondata = c.get_session().dump()
+
+# To restore a session you can use multiple ways (assuming the used vars containing the right data)
+c = pyanlist.client.Client(id, secret)
+c.restore_session(access_token, expire_time, pin, refresh_token)
+# or 
+s = pyanilist.session.Session()
+s.restore(mysessiondata)
+c.set_ession(s)
+```
+Just remember to save this data everytime, if you have an authentificated user session!
+
+
 # Limitations
-This is still in development. I'm writing a quick Code'n'Fix style, so the library can break everytime.
-Also the mechanism to handle user-sessions with a PIN is really buggy and not well thought out. Currently this library is handling the storage of the session data and can save it to a file (sleep and wake functions). This might work, but feels wrong. So I probably move this to a mechanism that moves the responsibility to the application that uses this library.
+This might be still in development. I'm writing a quick Code'n'Fix style, so the library can break everytime.
+I'm not sure, if I could tell this is stable. I just implemented the API by it's documententation. If you are using this library and something does not work, please tell me. I'm sure I can fix it in a short time, if you provide enough infos.
 
 ## Notice
-Moar API functions are about to come. I'm looking forward to add the functions I want to use first and then add additional calls. I might change my mind and create a full read-write library for Python 3. I'm coding in some languages, but Python is pretty new for me. So please excuse my C'ish style and probably wrong or missing usage of some properties.
-You could motivate me, by showing your interest. I really would like to list here some projects using my library.
+I was writing C-ish languages for a long time. I got some feedback to do things more pythonic but I think there are still things that could be implemented or named better. Just tell me, if you notice something.
+I think, this thing is finished for now. As long as there are no bug reports or something, I'm gonna work on other projects.
+I would be happy if you show your interest and I really would like to list here some projects using this library.
