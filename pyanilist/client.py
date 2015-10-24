@@ -6,8 +6,8 @@ from . import exception, session
 
 class Client:
     PREFIX = 'https://anilist.co/api/'
-    UA = 'py/grilllist'
-    REDIRECTURI = 'https://github.com/Tiefkuehlpizze/grilllist' # Placeholder or something /o\
+    UA = 'py/pyanilist'
+    REDIRECTURI = 'https://github.com/Tiefkuehlpizze/pyanilist' # Placeholder or something /o\
 
     def __init__(self, id, secret, pin=None):
         self.id = id
