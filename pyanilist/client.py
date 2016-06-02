@@ -4,10 +4,11 @@ import requests
 import time
 from . import exception, session
 
+
 class Client:
     PREFIX = 'https://anilist.co/api/'
     UA = 'py/pyanilist'
-    REDIRECTURI = 'https://github.com/Tiefkuehlpizze/pyanilist' # Placeholder or something /o\
+    REDIRECTURI = 'https://github.com/Tiefkuehlpizze/pyanilist'  # Placeholder or something /o\
 
     def __init__(self, id, secret, pin=None):
         self.id = id
@@ -23,12 +24,12 @@ class Client:
     def get_accesstoken(self):
         if self.session.access_token is not None and not self.session.expired():
             return self.session.access_token
-        
+
         url = self.PREFIX + 'auth/access_token'
-        
+
         payload = {
-            'grant_type' : 'client_credentials',
-            'client_id' : self.id,
+            'grant_type': 'client_credentials',
+            'client_id': self.id,
             'client_secret': self.secret,
         }
         if self.session.refresh_token:
@@ -39,8 +40,8 @@ class Client:
             payload['code'] = self.session.pin
 
         headers = {
-            'Content-Type' : 'application/x-www-form-urlencoded',
-            'User-Agent' : self.UA,
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': self.UA,
         }
         start = time.time()
         response = requests.post(url, data=payload, headers=headers)
@@ -55,7 +56,8 @@ class Client:
         return self.session.access_token
 
     def get_pin_uri(self):
-        return self.PREFIX + 'auth/authorize?grant_type=authorization_pin&client_id=%s&response_type=pin&redirect_uri=%s' % (self.id, self.REDIRECTURI)
+        return self.PREFIX + 'auth/authorize?grant_type=authorization_pin&client_id=%s&response_type=pin&redirect_uri=%s' % (
+            self.id, self.REDIRECTURI)
 
     def set_pin(self, pin):
         if not isinstance(pin, str):
@@ -89,17 +91,16 @@ class Client:
                 # Anilist can reply with just "followed" *duh*
                 pass
         return response
-                
 
     def send_request(self, method, path, **query):
         if method is not requests.get and self.session.pin is None:
             raise exception.NotAuthenticatedError("Action cannot be done until authentificated")
         headers = {
-            'User-Agent' : self.UA,
-            'Authorization' : 'Bearer ' + self.get_accesstoken(),
+            'User-Agent': self.UA,
+            'Authorization': 'Bearer ' + self.get_accesstoken(),
         }
         url = self.PREFIX + path
-        params = { } if 'data' not in query else query['data']
+        params = {} if 'data' not in query else query['data']
         response = self.check_error(method(url, params=params, headers=headers))
         try:
             return response.json()
@@ -108,7 +109,7 @@ class Client:
 
     def get(self, path, **query):
         return self.send_request(requests.get, path, **query)
-    
+
     def put(self, path, **query):
         return self.send_request(requests.put, path, **query)
 
@@ -127,7 +128,7 @@ class Client:
             raise TypeError('given parameter has an invalid type, was {!r}'.format(obj.__class__.__name__))
         self.session = obj
         self.login = self.session.refresh_token is not None
-    
+
     def restore_session(self, access_token, expire_time, pin=None, refresh_token=None):
         s = session.Session()
         s.access_token = access_token
@@ -135,19 +136,18 @@ class Client:
         s.pin = pin
         s.refresh_token = refresh_token
         self.set_session(s)
-        
 
     def get_session(self):
         return self.session
 
     def sleep(self, filename='state.txt'):
         data = {
-            'id' : self.id,
-            'secret' : self.secret,
-            'access_token' : self.session.access_token,
-            'expire_time' : self.session.expire_time,
-            'refresh_token' : self.session.refresh_token,
-            'pin' : self.session.pin,
+            'id': self.id,
+            'secret': self.secret,
+            'access_token': self.session.access_token,
+            'expire_time': self.session.expire_time,
+            'refresh_token': self.session.refresh_token,
+            'pin': self.session.pin,
         }
         with open(filename, 'w') as f:
             f.write(json.dumps(data))
@@ -169,4 +169,3 @@ class Client:
     @staticmethod
     def canWake(filename='state.txt'):
         return os.path.isfile(filename)
-        

@@ -3,10 +3,13 @@ from . import client
 SEASONS = ['winter', 'spring', 'summer', 'fall']
 TYPES = ['tv', 'movie', 'special', 'ova', 'ona', 'tv short']
 STATUS = ['not yet aired', 'currently airing', 'finished airing', 'cancelled']
-SORT = ['id', 'score', 'popularity', 'start date', 'end date', 'id-desc', 'score-desc', 'popularity-desc', 'start date-desc', 'end date-desc']
+SORT = ['id', 'score', 'popularity', 'start date', 'end date', 'id-desc', 'score-desc', 'popularity-desc',
+        'start date-desc', 'end date-desc']
+
 
 def genre_list(client):
     return client.get('genre_list')
+
 
 def basic(client, id):
     """ Gets basic data about an anime
@@ -18,6 +21,7 @@ def basic(client, id):
     """
     return client.get('anime/%d' % id)
 
+
 def page(client, id):
     """ Gets all data about an anime to display a page with all related data
     
@@ -27,6 +31,7 @@ def page(client, id):
     :rtype: str
     """
     return client.get('anime/%d/page' % id)
+
 
 def characters(client, id):
     """ Gets data about an anime's characters
@@ -38,6 +43,7 @@ def characters(client, id):
     """
     return client.get('anime/%d/characters' % id)
 
+
 def staff(client, id):
     """ Gets data about an anime's staff
     
@@ -47,6 +53,7 @@ def staff(client, id):
     :rtype: str
     """
     return cient.get('anime/%d/staff' % id)
+
 
 def actors(client, id):
     """ Gets data about an anime's actors
@@ -58,6 +65,7 @@ def actors(client, id):
     """
     return client.get('anime/%d/actors' % id)
 
+
 def airing(client, id):
     """ Gets data about an anime's airing times
     
@@ -68,17 +76,18 @@ def airing(client, id):
     """
     return client.get('anime/%d/airing' % id)
 
-def browse(client, 
-        page=None,
-        year=None,
-        season=None,
-        _type=None,
-        status=None,
-        genres=None,
-        genres_exclude=None,
-        sort=None,
-        airing_data=None,
-        full_page=None):
+
+def browse(client,
+           page=None,
+           year=None,
+           season=None,
+           _type=None,
+           status=None,
+           genres=None,
+           genres_exclude=None,
+           sort=None,
+           airing_data=None,
+           full_page=None):
     """ Searches animes with the given parameters
 
     :param client: an instance of a :class:`Client <Client>`
@@ -96,12 +105,12 @@ def browse(client,
     :rtype: str
     """
     nonecheck = {
-        'page' : page,
-        'year' : year,
-        'genres' : genres,
-        'genres_exclude' : genres,
-        'airing_data' : airing_data,
-        'full_page' : full_page,
+        'page': page,
+        'year': year,
+        'genres': genres,
+        'genres_exclude': genres,
+        'airing_data': airing_data,
+        'full_page': full_page,
     }
     params = {}
     for (name, val) in nonecheck.items():
@@ -128,8 +137,9 @@ def browse(client,
             params['sort'] = sort
         else:
             raise TypeError('sort must be in %s' % str(SORT))
-    
+
     return client.get('browse/anime', data=params)
+
 
 def favourite(client, id):
     """ Toggles the favourite status of an anime
@@ -141,7 +151,8 @@ def favourite(client, id):
     """
     _idisint(id)
     client.hasLogin()
-    return client.post('anime/favourite', data={ 'id' : id })
+    return client.post('anime/favourite', data={'id': id})
+
 
 def search(client, query):
     """ Searches an anime by its name

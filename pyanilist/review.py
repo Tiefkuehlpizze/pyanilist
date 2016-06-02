@@ -1,14 +1,17 @@
 from . import client
 
-AOM = ["anime","manga"]
+AOM = ["anime", "manga"]
+
 
 def _aomvalid(aom):
     if aom not in AOM:
         raise TypeError("aom must be in %s" % str(AOM))
 
+
 def _get(client, path, id, aom):
     _aomvalid(aom)
     return client.get(path % (aom, id))
+
 
 def get(client, id, aom="anime"):
     """ Gets a review
@@ -21,6 +24,7 @@ def get(client, id, aom="anime"):
     """
     return _get(client, '%s/%d', id, aom)
 
+
 def get_for(client, id, aom="anime"):
     """ Gets multiple reviews for an anime|manga
     
@@ -31,6 +35,7 @@ def get_for(client, id, aom="anime"):
     :rtype: str
     """
     return _get(client, '%s/%d/reviews', id, aom)
+
 
 def rate(client, id, rating=0, aom='anime'):
     """ Rates a review
@@ -45,15 +50,16 @@ def rate(client, id, rating=0, aom='anime'):
     _aomvalid(aom)
     if not 2 <= rating <= 0:
         raise ValueError('rating must be 0-2, not {!r}'.format(rating))
-    client.post('%s/review/rate' % aom, data={ 'id' : id, 'rating' : rating })
+    client.post('%s/review/rate' % aom, data={'id': id, 'rating': rating})
 
-def create(client, 
-        anime_id=None,
-        manga_id=None,
-        text=None,
-        summary=None,
-        private=None,
-        score=None):
+
+def create(client,
+           anime_id=None,
+           manga_id=None,
+           text=None,
+           summary=None,
+           private=None,
+           score=None):
     """ Creates a review 
 
     :param client: an instance of a :class:`Client <Client>`
@@ -99,5 +105,4 @@ def delete(client, id, aom="anime"):
     :rtype: ?
     """
     _aomvalid(aom)
-    return client.delete('%s/review' % aom, data={ 'id' : id })
-
+    return client.delete('%s/review' % aom, data={'id': id})

@@ -1,4 +1,3 @@
-
 __author__ = 'tiefkuehlpizze'
 __version__ = '0.1'
 

@@ -2,10 +2,13 @@ from . import client
 
 TYPES = ['manga', 'novel', 'manhua', 'manhwa', 'one', 'doujin']
 STATUS = ['not yet published', 'currently publishing', 'finished', 'cancelled']
-SORT = ['id', 'score', 'popularity', 'start date', 'end date', 'id-desc', 'score-desc', 'popularity-desc', 'start date-desc', 'end date-desc']
+SORT = ['id', 'score', 'popularity', 'start date', 'end date', 'id-desc', 'score-desc', 'popularity-desc',
+        'start date-desc', 'end date-desc']
+
 
 def genre_list(client):
     return client.get('genre_list')
+
 
 def basic(client, id):
     """ Gets basic data about an manga
@@ -17,6 +20,7 @@ def basic(client, id):
     """
     return client.get('manga/%d' % id)
 
+
 def page(client, id):
     """ Gets all data about an manga to display a page with all related data
     
@@ -26,6 +30,7 @@ def page(client, id):
     :rtype: str
     """
     return client.get('manga/%d/page' % id)
+
 
 def characters(client, id):
     """ Gets data about an manga's characters
@@ -37,6 +42,7 @@ def characters(client, id):
     """
     return client.get('manga/%d/characters' % id)
 
+
 def staff(client, id):
     """ Gets data about an manga's staff
     
@@ -47,15 +53,16 @@ def staff(client, id):
     """
     return client.get('manga/%d/staff' % id)
 
-def browse(client, 
-        page=None,
-        year=None,
-        _type=None,
-        status=None,
-        genres=None,
-        genres_exclude=None,
-        sort=None
-        ):
+
+def browse(client,
+           page=None,
+           year=None,
+           _type=None,
+           status=None,
+           genres=None,
+           genres_exclude=None,
+           sort=None
+           ):
     """ Searches mangas with the given parameters
 
     :param client: an instance of a :class:`Client <Client>`
@@ -95,8 +102,9 @@ def browse(client,
             params['sort'] = sort
         else:
             raise TypeError('sort must be in %s' % str(SORT))
-    
+
     return client.get('browse/manga', data=params)
+
 
 def favourite(client, id):
     """ Toggles the favourite status of an manga
@@ -107,7 +115,8 @@ def favourite(client, id):
     :rtype: str
     """
     client.hasLogin()
-    return client.post('manga/favourite', data={ 'id' : id })
+    return client.post('manga/favourite', data={'id': id})
+
 
 def search(client, query):
     """ Searches an manga by its name

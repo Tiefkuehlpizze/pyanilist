@@ -1,5 +1,6 @@
 import time
 
+
 class Session:
     access_token = None
     expire_time = None
@@ -10,13 +11,13 @@ class Session:
         if self.expire_time is None:
             return True
         return time.time() > self.expire_time
-    
+
     def dump(self):
         return {
-            'access_token' : self.access_token,
-            'expire_time' : self.expire_time,
-            'pin' : self.pin,
-            'refresh_token' : self.refresh_token,
+            'access_token': self.access_token,
+            'expire_time': self.expire_time,
+            'pin': self.pin,
+            'refresh_token': self.refresh_token,
         }
 
     def restore(self, data):

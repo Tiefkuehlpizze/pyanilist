@@ -1,5 +1,6 @@
 from . import client
 
+
 def basic(client, id):
     """ Gets basic data about an character
     
@@ -9,6 +10,7 @@ def basic(client, id):
     :rtype: str
     """
     return client.get('character/%d' % id)
+
 
 def page(client, id):
     """ Gets all data about an character to display a page with all related data
@@ -20,6 +22,7 @@ def page(client, id):
     """
     return clien.get('character/%d/page' % id)
 
+
 def favourite(client, id):
     """ Toggles the favourite status of an character
 
@@ -29,7 +32,8 @@ def favourite(client, id):
     :rtype: str
     """
     client.hasLogin()
-    return client.post('character/favourite', data={ 'id' : id })
+    return client.post('character/favourite', data={'id': id})
+
 
 def search(client, query):
     """ Searches an character by its name

@@ -1,12 +1,12 @@
 from . import client
 
-TAGS = { 1 : 'Anime', 2 : 'Manga', 3: 'Light Novels',
-         4 : 'Visual Novels', 5 : 'Release Discussion', 6 : '(Unused)',
-         7 : 'General', 8 : 'News', 9 : 'Music',
-         10 : 'Gaming', 11 : 'Site Feedback', 12 : 'Bug Reports',
-         13 : 'Site Announcements', 14 : 'List Customisation', 15 : 'Recommendations',
-         16 : 'Forum Games', 17 : 'Misc', 18 : 'AniList Apps'
-       }
+TAGS = {1: 'Anime', 2: 'Manga', 3: 'Light Novels',
+        4: 'Visual Novels', 5: 'Release Discussion', 6: '(Unused)',
+        7: 'General', 8: 'News', 9: 'Music',
+        10: 'Gaming', 11: 'Site Feedback', 12: 'Bug Reports',
+        13: 'Site Announcements', 14: 'List Customisation', 15: 'Recommendations',
+        16: 'Forum Games', 17: 'Misc', 18: 'AniList Apps'
+        }
 
 
 def recent(client, page=1):
@@ -17,7 +17,8 @@ def recent(client, page=1):
     :return: json string
     :rtype: str
     """
-    return client.get('forum/recent', data={ 'page' : page })
+    return client.get('forum/recent', data={'page': page})
+
 
 def new(client, page=1):
     """ Gets new threads
@@ -27,7 +28,8 @@ def new(client, page=1):
     :return: json string
     :rtype: str
     """
-    return client.get('forum/new', data={ 'page' : page })
+    return client.get('forum/new', data={'page': page})
+
 
 def subscribed(client, page=1):
     """ Gets subscribed threads
@@ -38,7 +40,7 @@ def subscribed(client, page=1):
     :rtype: str
     """
     client.hasLogin()
-    return client.get('forum/subscribed', data={ 'page' : page })
+    return client.get('forum/subscribed', data={'page': page})
 
 
 def thread(client, id):
@@ -51,6 +53,7 @@ def thread(client, id):
     """
     return client.get('forum/thread/%d' % id)
 
+
 def bytag(client, tag="", anime="", manga="", page=1):
     """ Gets threads by tags
 
@@ -62,7 +65,8 @@ def bytag(client, tag="", anime="", manga="", page=1):
     :return: json string
     :rtype: str
     """
-    return client.get('forum/tag', data={ 'tag' : tag, 'anime' : anime, 'manga' : manga, 'page' : page })
+    return client.get('forum/tag', data={'tag': tag, 'anime': anime, 'manga': manga, 'page': page})
+
 
 def _create(method, title, body, tags, tags_anime, tags_manga):
     """ Creates a new thread
@@ -80,7 +84,9 @@ def _create(method, title, body, tags, tags_anime, tags_manga):
         raise ValueError('Title can not be empty')
     if len(body) == 0:
         raise ValueError('Body can not be empty')
-    return method('forum/thread', data={ 'title' : title, 'body' : body, 'tags' : tags, 'tags_anime' : tags_anime, 'tags_manga' : tags_manga })
+    return method('forum/thread',
+                  data={'title': title, 'body': body, 'tags': tags, 'tags_anime': tags_anime, 'tags_manga': tags_manga})
+
 
 def create(client, title, body, tags, tags_anime, tags_manga):
     """ Creates a new thread
@@ -96,6 +102,7 @@ def create(client, title, body, tags, tags_anime, tags_manga):
     """
     _create(client.post, title, body, tags, tags_anime, tags_manga)
 
+
 def edit(client, title, body, tags, tags_anime, tags_manga):
     """ Creates a new thread
 
@@ -110,6 +117,7 @@ def edit(client, title, body, tags, tags_anime, tags_manga):
     """
     _create(client.put, title, body, tags, tags_anime, tags_manga)
 
+
 def delete(client, id):
     """ Deletes a thread
 
@@ -120,6 +128,7 @@ def delete(client, id):
     """
     return client.delete('forum/thread/%d' % id)
 
+
 def subscribe(client, id):
     """ toggles subscription of thread
 
@@ -128,7 +137,8 @@ def subscribe(client, id):
     :return: "subscribed" || "unsubscribed" (unverified)
     :rtype: str
     """
-    return client.post('forum/comment/subscribe', data={ 'thread_id' : id })
+    return client.post('forum/comment/subscribe', data={'thread_id': id})
+
 
 def comment(client, id, comment, reply_id=None):
     """ Writes a comment to a thread
@@ -143,12 +153,13 @@ def comment(client, id, comment, reply_id=None):
     if len(comment) == 0:
         raise ValueError("comment can not be empty")
     params = {
-        'thread_id' : id,
-        'comment' : comment,
+        'thread_id': id,
+        'comment': comment,
     }
     if reply_id is not None:
         params['reply_id'] = reply_id
     return client.post('forum/comment', data=params)
+
 
 def edit_comment(client, id, comment):
     """ Edits a comment
@@ -162,10 +173,11 @@ def edit_comment(client, id, comment):
     if len(comment) == 0:
         raise ValueError("comment can not be empty")
     params = {
-        'thread_id' : id,
-        'comment' : comment,
+        'thread_id': id,
+        'comment': comment,
     }
     return client.post('forum/comment', data=params)
+
 
 def delete_comment(client, id):
     """ Deletes a comment
@@ -177,6 +189,7 @@ def delete_comment(client, id):
     """
     return client.delete('forum/comment/%d' % id)
 
+
 def search(client, query):
     """ Searches the forum
 
@@ -186,4 +199,3 @@ def search(client, query):
     :rtype: str
     """
     return client.get('forum/search/%s' % query)
-

@@ -1,5 +1,6 @@
 from . import client
 
+
 def basic(client, id):
     """ Gets basic data about an staff
     
@@ -8,7 +9,8 @@ def basic(client, id):
     :return: the json answer of the API
     :rtype: str
     """
-    return client.get('staff/%d' %id)
+    return client.get('staff/%d' % id)
+
 
 def page(client, id):
     """ Gets all data about an staff to display a page with all related data
@@ -20,6 +22,7 @@ def page(client, id):
     """
     return client.get('staff/%d/page' % id)
 
+
 def favourite(client, id):
     """ Toggles the favourite status of an staff
 
@@ -29,7 +32,8 @@ def favourite(client, id):
     :rtype: str
     """
     client.hasLogin()
-    return client.post('staff/favourite', data={ 'id' : id })
+    return client.post('staff/favourite', data={'id': id})
+
 
 def search(client, query):
     """ Searches an staff by its name

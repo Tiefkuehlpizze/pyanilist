@@ -1,5 +1,6 @@
 from . import client
 
+
 def basic(client, id):
     """ Gets basic data about an studio
     
@@ -9,6 +10,7 @@ def basic(client, id):
     :rtype: str
     """
     return client.get('studio/%d' % id)
+
 
 def page(client, id):
     """ Gets all data about an studio to display a page with all related data
@@ -20,6 +22,7 @@ def page(client, id):
     """
     return client.get('studio/%d/page' % id)
 
+
 def favourite(client, id):
     """ Toggles the favourite status of an studio
 
@@ -29,7 +32,8 @@ def favourite(client, id):
     :rtype: str
     """
     client.hasLogin()
-    return client.post('studio/favourite', data={ 'id' : id })
+    return client.post('studio/favourite', data={'id': id})
+
 
 def search(client, query):
     """ Searches an studio by its name
