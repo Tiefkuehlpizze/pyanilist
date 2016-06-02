@@ -198,8 +198,8 @@ class Anilist:
             return _user.get_airing(self._con, limit)
         def get_search(self, query):
             return _user.search(self._con, query)
-        def write_activity(self, user, text, reply_id=None, messenger_id=None):
-            return _user.write_activity(self._con, user, text, reply_id, messenger_id)
+        def write_activity(self, text, reply_id=None, messenger_id=None):
+            return _user.write_activity(self._con, text, reply_id, messenger_id)
         def delete_activity(self, id, isreply=False):
             return _user.delete_activity(self._con, id, isreply)
         def toggle_follow(self, id):

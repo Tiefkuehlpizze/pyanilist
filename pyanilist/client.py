@@ -92,8 +92,8 @@ class Client:
                 
 
     def send_request(self, method, path, **query):
-        if method is not requests.get and self.pin is None:
-            raise NotAuthenticatedError("Action cannot be done until authentificated")
+        if method is not requests.get and self.session.pin is None:
+            raise exception.NotAuthenticatedError("Action cannot be done until authentificated")
         headers = {
             'User-Agent' : self.UA,
             'Authorization' : 'Bearer ' + self.get_accesstoken(),

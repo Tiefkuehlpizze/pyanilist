@@ -1,7 +1,7 @@
 from . import exception
 
 def get_me(client):
-    return getBasic(client)
+    return get_basic(client)
 
 def get_basic(client, user=None):
     return client.get('user' + ('/%s' % user if user is not None else ''))
@@ -42,7 +42,7 @@ def search(client, query):
     return client.get('user/search/%s' % query)
 
 # write
-def write_activity(client, user, text, reply_id = None, messenger_id = None):
+def write_activity(client, text, reply_id = None, messenger_id = None):
     payload = { 'text' : text }
     if reply_id is not None:
         payload['reply_id'] = reply_id

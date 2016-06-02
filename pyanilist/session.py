@@ -7,8 +7,8 @@ class Session:
     refresh_token = None
 
     def expired(self):
-        if self.expire_time == None:
-            return true
+        if self.expire_time is None:
+            return True
         return time.time() > self.expire_time
     
     def dump(self):
